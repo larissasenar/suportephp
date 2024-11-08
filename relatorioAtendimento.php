@@ -1,21 +1,17 @@
 <?php
-require_once __DIR__ . '\bibliotecas\dompdf\autoload.inc.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 use Dompdf\Dompdf;
-use Dompdf\Options;
 
-// Configurar o Dompdf
-$options = new Options();
-$options->set('defaultFont', 'Arial');
-$dompdf = new Dompdf($options);
+$dompdf = new Dompdf();
 
 // Logo e estilo CSS
-$logo = 'path/to/logo.png'; // Insira o caminho da sua logo
 $html = '
 <style>
     body {
         font-family: Arial, sans-serif;
-        margin: 20px;
+        margin: 10px 10px 10px 10px;
+        font-size: 12px;
     }
     .logo {
         text-align: center;
@@ -28,7 +24,7 @@ $html = '
     }
     th, td {
         border: 1px solid #ddd;
-        padding: 8px;
+        padding: 5px;
         text-align: left;
     }
     th {
@@ -44,17 +40,22 @@ $html = '
 // Adicionar logo e cabeçalho
 $html .= '
 <div class="logo">
-    <img src="' . $logo . '" alt="Logo" width="150">
+     <h1>Comunicaê Digital</h1>
 </div>
 <h1>Relatório de Atendimentos</h1>
 <table>
     <thead>
         <tr>
             <th>ID</th>
-            <th>Nome</th>
+            <th>Sistema</th>
+            <th>Descrição</th>
+            <th>Solicitação</th>
+            <th>Caminho Ocorrência</th>
+            <th>Solicitante</th>
             <th>Email</th>
-            <th>Data de Nascimento</th>
-            <th>Tipo de Usuário</th>
+            <th>Data Abertura</th>
+            <th>Recorrente</th>
+            <th>Tipo Usuário</th>
         </tr>
     </thead>
     <tbody>
@@ -62,27 +63,44 @@ $html .= '
 
 // Conectar ao banco de dados e buscar os dados
 require 'conexao.php';
-$sql = 'SELECT usuarios.id, usuarios.nome, usuarios.email, usuarios.data_nascimento, tipos_usuario.tipo_usuario 
-        FROM usuarios 
-        JOIN tipos_usuario ON usuarios.tipo_usuario_id = tipos_usuario.id';
+$sql = "SELECT 
+  abertura_chamado.id,
+  abertura_chamado.sistema,
+  abertura_chamado.descricao,
+  abertura_chamado.solicitacao,
+  abertura_chamado.caminho_ocorrencia,
+  abertura_chamado.solicitante,
+  abertura_chamado.email,
+  abertura_chamado.data_abertura,
+  abertura_chamado.recorrente,
+  tipos_usuario.tipo_usuario
+FROM 
+  abertura_chamado 
+  JOIN tipos_usuario ON abertura_chamado.tipo_usuario_id = tipos_usuario.id";
+
 $resultado = mysqli_query($conexao, $sql);
 
 if (mysqli_num_rows($resultado) > 0) {
-    while ($row = mysqli_fetch_assoc($resultado)) {
-        $html .= '
-        <tr>
-            <td>' . $row['id'] . '</td>
-            <td>' . htmlspecialchars($row['nome']) . '</td>
-            <td>' . htmlspecialchars($row['email']) . '</td>
-            <td>' . date('d/m/Y', strtotime($row['data_nascimento'])) . '</td>
-            <td>' . htmlspecialchars($row['tipo_usuario']) . '</td>
-        </tr>
-        ';
-    }
+  while ($row = mysqli_fetch_assoc($resultado)) {
+    $html .= ' 
+      <tr> 
+        <td>' . $row['id'] . '</td> 
+        <td>' . htmlspecialchars($row['sistema']) . '</td> 
+        <td>' . htmlspecialchars($row['descricao']) . '</td> 
+        <td>' . htmlspecialchars($row['solicitacao']) . '</td> 
+        <td>' . htmlspecialchars($row['caminho_ocorrencia']) . '</td> 
+        <td>' . nl2br(htmlspecialchars($row['solicitante'])) . '</td>
+        <td>' . htmlspecialchars($row['email']) . '</td> 
+        <td>' . date('d/m/Y', strtotime($row['data_abertura'])) . '</td> 
+        <td>' . htmlspecialchars($row['recorrente']) . '</td> 
+        <td>' . htmlspecialchars($row['tipo_usuario']) . '</td> 
+      </tr> 
+    ';
+  }
 } else {
     $html .= '
     <tr>
-        <td colspan="5" style="text-align:center;">Nenhum registro encontrado</td>
+        <td colspan="7" style="text-align:center;">Nenhum registro encontrado</td>
     </tr>
     ';
 }
@@ -95,9 +113,8 @@ $html .= '
 
 // Gerar o PDF
 $dompdf->loadHtml($html);
-$dompdf->setPaper('A4', 'landspace');
+$dompdf->setPaper('A4', 'Landscape');
 $dompdf->render();
-
 // Enviar o PDF ao navegador
 $dompdf->stream("relatorio_atendimentos.pdf", ["Attachment" => false]);
 exit;

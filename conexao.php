@@ -1,8 +1,9 @@
 <?php
-define('HOST', 'sql208.infinityfree.com');
-define('USUARIO', 'if0_37658770');
-define('SENHA', 'n58CWn9X08fgRp');
-define('DB', 'if0_37658770_comunicaedigital');
+define('HOST', '127.0.0.1');
+define('USUARIO', 'root');
+define('SENHA', '');
+define('DB', 'comunicaedigital');
  
-$conexao = mysqli_connect(HOST, USUARIO, SENHA, DB) or die ('Não foi possível conectar');
+$conexao = mysqli_connect(HOST, USUARIO, SENHA, DB) or die ('Falha na conexão com o banco de dados:');
+
 ?>

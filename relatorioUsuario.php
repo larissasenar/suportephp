@@ -1,13 +1,9 @@
 <?php
-require_once __DIR__ . '\bibliotecas\dompdf\autoload.inc.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 use Dompdf\Dompdf;
-use Dompdf\Options;
 
-// Configurar o Dompdf
-$options = new Options();
-$options->set('defaultFont', 'Arial');
-$dompdf = new Dompdf($options);
+$dompdf = new Dompdf();
 
 // Logo e estilo CSS
 $logo = 'path/to/logo.png'; // Insira o caminho da sua logo
@@ -44,7 +40,7 @@ $html = '
 // Adicionar logo e cabeçalho
 $html .= '
 <div class="logo">
-    <img src="' . $logo . '" alt="Logo" width="150">
+    <h1>Comunicaê Digital</h1>
 </div>
 <h1>Relatório cadastro de usuários</h1>
 <table>
@@ -99,5 +95,5 @@ $dompdf->setPaper('A4', 'portrait');
 $dompdf->render();
 
 // Enviar o PDF ao navegador
-$dompdf->stream("relatorio_atendimentos.pdf", ["Attachment" => false]);
+$dompdf->stream("relatorio_usuario.pdf", ["Attachment" => false]);
 exit;
