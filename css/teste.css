@@ -1,0 +1,63 @@
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: #f4f6f9;
+  }
+  
+  header {
+    background: #212529;
+    color: white;
+    padding: 20px 0;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-title {
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  
+  .card p {
+    font-size: 14px;
+    color: #6c757d;
+  }
+  
+  @media only screen and (max-width: 768px) {
+    /* Estilos para dispositivos móveis */
+  
+    .table-responsive {
+      overflow-x: auto;
+    }
+  
+    .card-header {
+      display: block;
+    }
+  
+    .card-header h4 {
+      margin-bottom: 10px;
+    }
+  
+    .card-header a {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    .table-scroll {
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 300px;
+    }
+  }
+  
